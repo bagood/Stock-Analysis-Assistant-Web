@@ -1,6 +1,21 @@
-from subprocessFunctions import subprocess_functions
+import sys
+import subprocess
 
-sf = subprocess_functions()
+packages = [
+    'pandas',
+    'numpy',
+    'datetime',
+    'pytz',
+    'plotly',
+    'yfinance',
+    'scikit-learn',
+    'keras',
+    'tensorflow',
+    'matplotlib'
+    ]
+
+for package in packages:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 from webFunctions import web_functions
 from modelFunctions import model_functions
@@ -9,8 +24,6 @@ from prepareDatasetFunctions import prepare_dataset_functions
 wf = web_functions()
 mf = model_functions()
 pdf = prepare_dataset_functions()
-
-sf.install_packages()
 
 import streamlit as st
 from datetime import datetime
