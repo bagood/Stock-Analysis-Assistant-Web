@@ -1,18 +1,20 @@
-import glob
-import streamlit as st
-from datetime import datetime
-
 from webFunctions import web_functions
 from modelFunctions import model_functions
 from prepareDatasetFunctions import prepare_dataset_functions
+from subprocessFunctions import subprocess_functions
 
+sf = subprocess_functions()
 wf = web_functions()
 mf = model_functions()
 pdf = prepare_dataset_functions()
 
+sf.install_packages()
+
+import streamlit as st
+from datetime import datetime
+
 st.set_option('deprecation.showPyplotGlobalUse', False)
 st.set_page_config(page_title='Stock Analysis Assistant', page_icon=":reminder_ribbon:", layout='centered')
-
 
 with st.container():
     wf.add_center_text('Stock Analysis Assistant', 'h1')
@@ -42,16 +44,15 @@ with st.container():
         epochs = 100
         window_size = 5
         split_index = round(len(emiten_feature_data) * 0.75)
-
         train_feature, train_target, test_feature, test_target = mf.slice_dataset(emiten_feature_data, emiten_target_data, split_index)
         train_feature = mf.window_feature_data(window_size, train_feature)
         test_feature = mf.window_feature_data(window_size, test_feature, True)
         train_target = mf.adjust_target_data(window_size, train_target)
         test_target = mf.adjust_target_data(window_size, test_target)
         forecast, actual = mf.model_forecast(emiten, test_feature, test_target)
-
         wf.add_center_text(f'Price Forcast', 'h3')
         fig_forecast = wf.visualize_forecast(forecast, actual, emiten_data)
         st.plotly_chart(fig_forecast, use_container_width = True)
+
     except:
         wf.add_center_text(f'Sorry, the model is currently unavailable', 'h3')
