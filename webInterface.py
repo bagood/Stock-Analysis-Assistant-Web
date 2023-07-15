@@ -15,7 +15,9 @@ packages = [
     ]
 
 for package in packages:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+    if package not in sys.modules:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
 
 from webFunctions import web_functions
 from modelFunctions import model_functions
