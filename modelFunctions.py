@@ -20,12 +20,12 @@ class model_functions:
     def slice_training_testing_dataset(self, feature_data, target_data, training_perc):
         """slice the dataset to create training and testing dataset
         """
-        add_day = 0
         if self.forecast_today:
-            add_day = 1
-        
-        feature_data = feature_data[:-(1 + add_day)] 
-        target_data = target_data[1:-(add_day)] 
+            feature_data = feature_data[:-2] 
+            target_data = target_data[1:-1]
+        else:
+            feature_data = feature_data[:-1] 
+            target_data = target_data[1:]
 
         split_index = self._calculate_split_index(feature_data, training_perc)
         
